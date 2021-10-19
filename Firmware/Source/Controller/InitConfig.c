@@ -1,4 +1,5 @@
-#include <InitConfig.h>
+#include "InitConfig.h"
+#include "SysConfig.h"
 
 
 // Forward functions

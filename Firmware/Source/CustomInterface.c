@@ -1,5 +1,6 @@
 #include "CustomInterface.h"
 #include "Delay.h"
+#include "Global.h"
 
 //Definitions
 //
