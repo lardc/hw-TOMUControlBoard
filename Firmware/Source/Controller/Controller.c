@@ -40,6 +40,7 @@ typedef enum __SubState
 volatile DeviceState CONTROL_State = DS_None;
 volatile SubState SUB_State = SS_None;
 static Boolean CycleActive = FALSE;
+volatile Boolean CONTROL_Debug = FALSE;
 //
 volatile Int64U CONTROL_TimeCounter = 0;
 static Int64U CONTROL_TimeCounterDelay = 0;
@@ -233,9 +234,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				LL_ExternalSync(FALSE);
 			}
 			break;
-		case ACT_DBG_TOCU_CTRL:
-			CUSTINT_SendRaw(DataTable[REG_DBG_TOCU_DATA]);
-			break;
 
 		case ACT_DBG_VSO:
 			DataTable[REG_DBG_VSO_VALUE] = MEASURE_BatteryVoltage();
@@ -253,6 +251,36 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			DataTable[REG_DBG_ADC_RAW] = MEASURE_DUTCurrentRaw();
 			break;
 
+		case ACT_DBG_TOCU_CTRL:
+			CONTROL_Debug = TRUE;
+			CUSTINT_SendRaw(DataTable[REG_DBG_TOCU_DATA]);
+			break;
+
+		case ACT_DBG_TOCU_DEFAULT:
+			CUSTINT_SendTOCU(0, FALSE, FALSE, TRUE);
+			CONTROL_Debug = FALSE;
+			break;
+
+		case ACT_DBG_TOCU_FAN:
+			CONTROL_Debug = TRUE;
+			CUSTINT_SendTOCU(0, TRUE, FALSE, TRUE);
+			break;
+
+		case ACT_DBG_TOCU_CONTACTOR:
+			CONTROL_Debug = TRUE;
+			CUSTINT_SendTOCU(0, FALSE, TRUE, TRUE);
+			break;
+
+		case ACT_DBG_TOCU_PS:
+			CONTROL_Debug = TRUE;
+			CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
+			break;
+
+		case ACT_DBG_TOCU_CURRENT:
+			CONTROL_Debug = TRUE;
+			CUSTINT_SendTOCU(DataTable[REG_CURRENT_VALUE], FALSE, FALSE, TRUE);
+			break;
+
 		default:
 			return FALSE;
 	}
@@ -263,63 +291,65 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 void CONTROL_BatteryVoltageMonitor()
 {
-	float BatteryVoltage;
-	bool FanEnable = FALSE;
+	if (!CONTROL_Debug){
+		float BatteryVoltage;
+		bool FanEnable = FALSE;
 
-	BatteryVoltage = MEASURE_BatteryVoltage();
-	DataTable[REG_DBG_VSO_VALUE] = BatteryVoltage;
+		BatteryVoltage = MEASURE_BatteryVoltage();
+		DataTable[REG_DBG_VSO_VALUE] = BatteryVoltage;
 
-	// Логика работы вентиляторов
-	if ((CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
-	{
-		FanEnable = TRUE;
-	}
-	else if (CONTROL_State == DS_Ready)
-	{
-		if (CONTROL_TimeCounter < (CONTROL_TimeFanLastTurnOn + FAN_ACTIVE_TIME))
-			FanEnable = TRUE;
-		else if (CONTROL_TimeCounter > (CONTROL_TimeFanLastTurnOn + FAN_SLEEP_TIME))
-			CONTROL_TimeFanLastTurnOn = CONTROL_TimeCounter;
-	}
-	LL_ExternalFan(FanEnable);
-
-	// Оцифровка напряжения
-	if ((CONTROL_State == DS_Ready) || (CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
-	{
-		// Поддержание заряда батареи в режиме готовности
-		if (BatteryVoltage <= V_BAT_THRESHOLD_MIN)
-			CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, TRUE);
-		else if (BatteryVoltage > V_BAT_THRESHOLD_MAX)
-			CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, FALSE);
-
-		// Таймаут ожидания требуемого напряжения при заряде или старте измерений
-		if ((CONTROL_State == DS_Charging) || ((CONTROL_State == DS_InProcess) && (SUB_State == SS_WaitVoltage)))
+		// Логика работы вентиляторов
+		if ((CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
 		{
-			if (CONTROL_TimeCounter > CONTROL_TimeCounterDelay)
-			{
-				LL_ExternalFan(FALSE);
-				CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
-				CONTROL_SwitchToFault(DF_BATTERY);
-				return;
-			}
+			FanEnable = TRUE;
+		}
+		else if (CONTROL_State == DS_Ready)
+		{
+			if (CONTROL_TimeCounter < (CONTROL_TimeFanLastTurnOn + FAN_ACTIVE_TIME))
+				FanEnable = TRUE;
+			else if (CONTROL_TimeCounter > (CONTROL_TimeFanLastTurnOn + FAN_SLEEP_TIME))
+				CONTROL_TimeFanLastTurnOn = CONTROL_TimeCounter;
+		}
+		LL_ExternalFan(FanEnable);
 
-			if ((BatteryVoltage > V_BAT_THRESHOLD_MIN) && (BatteryVoltage < V_BAT_THRESHOLD_MAX))
+		// Оцифровка напряжения
+		if ((CONTROL_State == DS_Ready) || (CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
+		{
+			// Поддержание заряда батареи в режиме готовности
+			if (BatteryVoltage <= V_BAT_THRESHOLD_MIN)
+				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, TRUE);
+			else if (BatteryVoltage > V_BAT_THRESHOLD_MAX)
+				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, FALSE);
+
+			// Таймаут ожидания требуемого напряжения при заряде или старте измерений
+			if ((CONTROL_State == DS_Charging) || ((CONTROL_State == DS_InProcess) && (SUB_State == SS_WaitVoltage)))
 			{
-				// Смена состояния при завершении заряда
-				if (CONTROL_State == DS_Charging)
-					CONTROL_SetDeviceState(DS_Ready);
-				// Переход на следующий шаг измерения
-				else
-					SUB_State = SS_VoltageReady;
+				if (CONTROL_TimeCounter > CONTROL_TimeCounterDelay)
+				{
+					LL_ExternalFan(FALSE);
+					CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
+					CONTROL_SwitchToFault(DF_BATTERY);
+					return;
+				}
+
+				if ((BatteryVoltage > V_BAT_THRESHOLD_MIN) && (BatteryVoltage < V_BAT_THRESHOLD_MAX))
+				{
+					// Смена состояния при завершении заряда
+					if (CONTROL_State == DS_Charging)
+						CONTROL_SetDeviceState(DS_Ready);
+					// Переход на следующий шаг измерения
+					else
+						SUB_State = SS_VoltageReady;
+				}
 			}
 		}
-	}
 
-	// Если блок простаивает
-	if ((CONTROL_State == DS_None) && (CONTROL_TimeCounter > CONTROL_TimeIdleSendTOCU))
-	{
-		CONTROL_TimeIdleSendTOCU = CONTROL_TimeCounter + T_IDLE_SEND_TOCU;
-		CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
+		// Если блок простаивает
+		if ((CONTROL_State == DS_None) && (CONTROL_TimeCounter > CONTROL_TimeIdleSendTOCU))
+		{
+			CONTROL_TimeIdleSendTOCU = CONTROL_TimeCounter + T_IDLE_SEND_TOCU;
+			CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
+		}
 	}
 }
 //-----------------------------------------------

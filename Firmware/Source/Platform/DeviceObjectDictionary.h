@@ -20,6 +20,11 @@
 #define ACT_DBG_VSO_RAW					17	// Измерение сырого напряжения заряда в регистр REG_DBG_ADC_RAW
 #define ACT_DBG_I_DUT_RAW				18	// Измерение сырого тока DUT в регистр REG_DBG_ADC_RAW
 #define	ACT_DBG_TOCU_CTRL				19	// Передача уставки в TOCU
+#define ACT_DBG_TOCU_DEFAULT			20	// Сброс всех регистров TOCU
+#define ACT_DBG_TOCU_FAN				21	// Проверка вентилятора TOCU
+#define ACT_DBG_TOCU_CONTACTOR			22	// Проверка контактора TOCU
+#define ACT_DBG_TOCU_PS					23	// Проверка управления БП 300В TOCU
+#define ACT_DBG_TOCU_CURRENT			24	// Проверка побитового задания тока в TOCU
 //
 #define ACT_MEASURE_START				100	// Запуск измерения
 #define ACT_MEASURE_STOP				101	// Останов измерения
