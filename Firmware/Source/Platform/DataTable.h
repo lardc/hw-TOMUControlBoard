@@ -14,7 +14,7 @@
 
 // Constants
 //
-#define DATA_TABLE_SIZE         256
+#define DATA_TABLE_SIZE         300
 #define DATA_TABLE_NV_SIZE      128
 //
 #define DATA_TABLE_NV_START     0
@@ -30,8 +30,8 @@
  *		END OF READ/WRITE AREA		------------- 191
  * 		START OF READ-ONLY AREA		------------- 192
  * 			[VOLATILE R-O AREA]
- *		END OF READ-ONLY AREA		------------- 255
- * DATA TABLE END 					------------- [255]
+ *		END OF READ-ONLY AREA		------------- 300
+ * DATA TABLE END 					------------- [300]
  */
 
 
@@ -65,6 +65,8 @@ void DT_SaveNVPartToEPROM();
 void DT_ResetNVPart(FUNC_SetDefaultValues SetFunc);
 // Reset volatile read-write part of data table
 void DT_ResetWRPart(FUNC_SetDefaultValues SetFunc);
+// Save firmware information to data table
+void DT_SaveFirmwareInfo(Int16U SlaveNID, Int16U MasterNID);
 
 void DT_ResetNVPartToDefault(void);
 
