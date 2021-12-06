@@ -278,8 +278,12 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_DBG_TOCU_CURRENT:
+			{
 			CONTROL_Debug = TRUE;
-			CUSTINT_SendTOCU(DataTable[REG_CURRENT_VALUE], FALSE, FALSE, TRUE);
+			CUSTINT_SendTOCU(DataTable[REG_CURRENT_VALUE], TRUE, TRUE, FALSE);
+			DELAY_US(100);
+			CUSTINT_SendTOCU(0, TRUE, FALSE, TRUE);
+			}
 			break;
 
 		default:
