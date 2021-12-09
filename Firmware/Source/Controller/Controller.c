@@ -280,9 +280,16 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DBG_TOCU_CURRENT:
 			{
 			CONTROL_Debug = TRUE;
+			CUSTINT_SendTOCU(0, TRUE, TRUE, FALSE);
+			LL_ExternalSync(TRUE);
+			DELAY_US(10);
 			CUSTINT_SendTOCU(DataTable[REG_CURRENT_VALUE], TRUE, TRUE, FALSE);
-			DELAY_US(100);
+			DELAY_US(25);
+			DataTable[REG_DBG_I_DUT_VALUE] = MEASURE_DUTCurrent();
+			DELAY_US(25);
 			CUSTINT_SendTOCU(0, TRUE, FALSE, TRUE);
+			LL_ExternalSync(FALSE);
+			CONTROL_Debug = FALSE;
 			}
 			break;
 
