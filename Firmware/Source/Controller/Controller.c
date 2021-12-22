@@ -258,23 +258,23 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_DBG_TOCU_DEFAULT:
-			CUSTINT_SendTOCU(0, FALSE, FALSE, TRUE);
+			CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
 			CONTROL_Debug = FALSE;
 			break;
 
 		case ACT_DBG_TOCU_FAN:
 			CONTROL_Debug = TRUE;
-			CUSTINT_SendTOCU(0, TRUE, FALSE, TRUE);
+			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);
 			break;
 
 		case ACT_DBG_TOCU_CONTACTOR:
 			CONTROL_Debug = TRUE;
-			CUSTINT_SendTOCU(0, FALSE, TRUE, TRUE);
+			CUSTINT_SendTOCU(0, FALSE, TRUE, FALSE);
 			break;
 
 		case ACT_DBG_TOCU_PS:
 			CONTROL_Debug = TRUE;
-			CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
+			CUSTINT_SendTOCU(0, FALSE, FALSE, TRUE);
 			break;
 
 		case ACT_DBG_TOCU_CURRENT:
