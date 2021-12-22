@@ -201,12 +201,9 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		// Debug actions
 		//
 		case ACT_DBG_COMM:
-			{
-				LL_RelayControl(TRUE);
-				Delay_mS(1000);
-				LL_RelayControl(FALSE);
-			}
+				LL_RelayControl(DataTable[REG_DBG]);
 			break;
+
 		case ACT_DBG_LAMP:
 			{
 				LL_ExternalLED(TRUE);
@@ -214,6 +211,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				LL_ExternalLED(FALSE);
 			}
 			break;
+
 		case ACT_DBG_FAN:
 			{
 				LL_ExternalFan(TRUE);
@@ -221,6 +219,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				LL_ExternalFan(FALSE);
 			}
 			break;
+
 		case ACT_DBG_GATE_CONTROL:
 			{
 				LL_GateControl(TRUE);
@@ -228,6 +227,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				LL_GateControl(FALSE);
 			}
 			break;
+
 		case ACT_DBG_SYNC:
 			{
 				LL_ExternalSync(TRUE);
@@ -254,7 +254,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_DBG_TOCU_CTRL:
 			CONTROL_Debug = TRUE;
-			CUSTINT_SendRaw(DataTable[REG_DBG_TOCU_DATA]);
+			CUSTINT_SendRaw(DataTable[REG_DBG]);
 			break;
 
 		case ACT_DBG_TOCU_DEFAULT:

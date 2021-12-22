@@ -4,7 +4,7 @@
 #include "stdinc.h"
 
 static const char git_branch[] = "develop-PCBv1.1-MME404"; 
-static const char git_commit[] = "8b9b3ac563c40bbb3c7bfbcc1827f8191aaa11f1"; 
-static const char git_date[] = "2021/11/16T12:41:25"; 
+static const char git_commit[] = "0d52e2d9d6c89eed2a19b028cfabdf076508a40d"; 
+static const char git_date[] = "2021/12/12T18:17:44"; 
 
 #endif // __GIT_INFO_H
