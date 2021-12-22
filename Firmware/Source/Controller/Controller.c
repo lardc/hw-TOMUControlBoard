@@ -19,6 +19,7 @@
 #include "InitConfig.h"
 #include "Measurement.h"
 #include "BCCIxParams.h"
+#include "Delay.h"
 
 // Types
 //
@@ -55,7 +56,6 @@ void CONTROL_SetDeviceState(DeviceState NewState);
 void CONTROL_Idle();
 void CONTROL_BatteryVoltageMonitor();
 void CONTROL_Logic();
-void Delay_mS(uint32_t Delay);
 void CONTROL_SwitchToFault(Int16U Reason);
 void CONTROL_ResetToDefaults();
 void CONTROL_WatchDogUpdate();
@@ -207,7 +207,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DBG_LAMP:
 			{
 				LL_ExternalLED(TRUE);
-				Delay_mS(1000);
+				DELAY_MS(1000);
 				LL_ExternalLED(FALSE);
 			}
 			break;
@@ -215,7 +215,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DBG_FAN:
 			{
 				LL_ExternalFan(TRUE);
-				Delay_mS(1000);
+				DELAY_MS(1000);
 				LL_ExternalFan(FALSE);
 			}
 			break;
@@ -223,7 +223,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DBG_GATE_CONTROL:
 			{
 				LL_GateControl(TRUE);
-				Delay_mS(1000);
+				DELAY_US(1000);
 				LL_GateControl(FALSE);
 			}
 			break;
@@ -231,7 +231,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DBG_SYNC:
 			{
 				LL_ExternalSync(TRUE);
-				Delay_mS(1000);
+				DELAY_MS(1000);
 				LL_ExternalSync(FALSE);
 			}
 			break;
@@ -511,14 +511,6 @@ void CONTROL_SetDeviceState(DeviceState NewState)
 {
 	CONTROL_State = NewState;
 	DataTable[REG_DEV_STATE] = NewState;
-}
-//-----------------------------------------------
-
-void Delay_mS(uint32_t Delay)
-{
-	uint64_t Counter = (uint64_t)CONTROL_TimeCounter + Delay;
-	while (Counter > CONTROL_TimeCounter)
-		CONTROL_WatchDogUpdate();
 }
 //-----------------------------------------------
 
