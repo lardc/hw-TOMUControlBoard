@@ -12,7 +12,7 @@
 
 //Definitions
 //
-#define DUT_CURRENT_MIN			160		// â À
+#define DUT_CURRENT_MIN			10		// â À
 #define DUT_CURRENT_MAX			1250	// â À
 #define DUT_CURRENT_DEF			160		// â À
 //
