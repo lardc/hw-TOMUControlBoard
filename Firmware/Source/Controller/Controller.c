@@ -475,8 +475,8 @@ void CONTROL_Logic()
 			{
 				DataTable[REG_TEST_FINISHED] = OPRESULT_FAIL;
 
-				DataTable[REG_MEAS_TIME_DELAY] = 0;
-				DataTable[REG_MEAS_TIME_ON] = 0;
+				//DataTable[REG_MEAS_TIME_DELAY] = 0;
+				//DataTable[REG_MEAS_TIME_ON] = 0;
 			}
 
 			// Запись ошибок
