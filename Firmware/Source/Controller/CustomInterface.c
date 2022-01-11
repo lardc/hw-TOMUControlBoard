@@ -37,14 +37,11 @@ void CUSTINT_SendRaw(uint16_t Data)
 	for (int cnt = 0; cnt < 16; cnt++)
 	{
 		LL_TOCUSerialData((Data >> cnt) & 1);
-		DELAY_US(1);
 		LL_TOCUSerialSRCK(TRUE);
-		DELAY_US(1);
 		LL_TOCUSerialSRCK(FALSE);
 	}
 
 	LL_TOCUSerialRCK(TRUE);
-	DELAY_US(1);
 	LL_TOCUSerialRCK(FALSE);
 	LL_TOCUSerialData(FALSE);
 	LL_TOCUSerialEnable(TRUE);
