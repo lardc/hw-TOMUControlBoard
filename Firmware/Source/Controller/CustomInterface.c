@@ -28,6 +28,9 @@ uint16_t CUSTINT_PackData(float Current, bool Fan, bool Contactor, bool PSon);
 //
 void CUSTINT_SendTOCU(float Current, bool Fan, bool Contactor, bool PSon)
 {
+	if(!Current)
+		LL_TOCUSerialEnable(FALSE);
+
 	CUSTINT_SendRaw(CUSTINT_PackData(Current, Fan, Contactor, PSon));
 }
 //------------------------------------------------------------------------------
