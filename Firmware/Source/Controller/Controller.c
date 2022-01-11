@@ -411,11 +411,9 @@ void CONTROL_Logic()
 
 				LL_GateControl(TRUE);									// Запуск тока управления
 				LL_ExternalSync(TRUE);
-				DELAY_US(20);
+				DELAY_US(40);
 				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
-				DELAY_US(20);
 			}
-
 			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
 			CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
 			LL_GateControl(FALSE);									// Отключение тока управления
