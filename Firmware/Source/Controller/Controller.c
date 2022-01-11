@@ -411,12 +411,13 @@ void CONTROL_Logic()
 
 				LL_GateControl(TRUE);									// Запуск тока управления
 				LL_ExternalSync(TRUE);
-				DELAY_US(30);
+				DELAY_US(20);
 				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
-				CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
+				DELAY_US(20);
 			}
 
 			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
+			CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
 			LL_GateControl(FALSE);									// Отключение тока управления
 			LL_TimersReset(TRUE);									// Сброс системы измерения времени
 			LL_ExternalSync(FALSE);
