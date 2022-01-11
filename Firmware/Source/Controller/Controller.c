@@ -399,28 +399,28 @@ void CONTROL_Logic()
 			CurrentSetpoint = DataTable[REG_CURRENT_VALUE];
 
 			CUSTINT_SendTOCU(CurrentSetpoint, TRUE, TRUE, FALSE);	// Отпирание нужных мосфетов
-			DELAY_US(50);
+			DELAY_US(30);
 			CurrentPreActual = MEASURE_DUTCurrent();				// Измерения тока до подачи сигнала управления для определения кз на выходе
-			DELAY_US(10);
 
-			LL_GateLatch(TRUE);										// Включение защёлки сигнала управления
-			LL_TimersReset(FALSE);									// Активация счётчиков
-			Overflow90 = FALSE;
-			Overflow10 = FALSE;
+			if(CurrentPreActual < CURRENT_MIN_THRESHOLD)
+			{
+				LL_GateLatch(TRUE);										// Включение защёлки сигнала управления
+				LL_TimersReset(FALSE);									// Активация счётчиков
+				Overflow90 = FALSE;
+				Overflow10 = FALSE;
 
-			LL_GateControl(TRUE);									// Запуск тока управления
-			LL_ExternalSync(TRUE);
-			DELAY_US(50);
-			CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
-			CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
-			DELAY_US(10);
+				LL_GateControl(TRUE);									// Запуск тока управления
+				LL_ExternalSync(TRUE);
+				DELAY_US(30);
+				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
+				CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
+			}
 
+			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
 			LL_GateControl(FALSE);									// Отключение тока управления
 			LL_TimersReset(TRUE);									// Сброс системы измерения времени
 			LL_ExternalSync(FALSE);
 			LL_GateLatch(FALSE);									// Сброс защёлки
-			DELAY_US(10);
-			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
 			LL_RelayControl(FALSE);									// Размыкание реле
 
 			// Получение времён из счётчиков
