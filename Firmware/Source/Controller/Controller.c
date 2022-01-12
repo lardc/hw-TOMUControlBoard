@@ -417,13 +417,15 @@ void CONTROL_Logic()
 			}
 
 			INT_OverflowEnable(FALSE);
-			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
+			CUSTINT_SendTOCU(0, TRUE, TRUE, FALSE);					// Закрытие силовых мосфетов
 			CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
 			LL_GateControl(FALSE);									// Отключение тока управления
 			LL_TimersReset(TRUE);									// Сброс системы измерения времени
 			LL_ExternalSync(FALSE);
 			LL_GateLatch(FALSE);									// Сброс защёлки
 			LL_RelayControl(FALSE);									// Размыкание реле
+			DELAY_US(50);
+			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Размыкание контактора
 
 			// Получение времён из счётчиков
 			Counter10Percent = CUSTINT_UnpackData10SR(CountersData);
@@ -477,8 +479,8 @@ void CONTROL_Logic()
 			{
 				DataTable[REG_TEST_FINISHED] = OPRESULT_FAIL;
 
-				//DataTable[REG_MEAS_TIME_DELAY] = 0;
-				//DataTable[REG_MEAS_TIME_ON] = 0;
+				DataTable[REG_MEAS_TIME_DELAY] = 0;
+				DataTable[REG_MEAS_TIME_ON] = 0;
 			}
 
 			// Запись ошибок
