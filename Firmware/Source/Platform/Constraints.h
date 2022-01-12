@@ -1,4 +1,4 @@
-// -----------------------------------------
+Ôªø// -----------------------------------------
 // Global definitions
 // ----------------------------------------
 
@@ -12,13 +12,13 @@
 
 //Definitions
 //
-#define DUT_CURRENT_MIN			10		// ‚ ¿
-#define DUT_CURRENT_MAX			1250	// ‚ ¿
-#define DUT_CURRENT_DEF			160		// ‚ ¿
+#define DUT_CURRENT_MIN			10		// –≤ –ê
+#define DUT_CURRENT_MAX			1250	// –≤ –ê
+#define DUT_CURRENT_DEF			160		// –≤ –ê
 //
-#define CURRENT_SHUNT_MIN		10		// ‚ ÏŒÏ ı1000
-#define CURRENT_SHUNT_MAX		10000	// ‚ ÏŒÏ ı1000
-#define CURRENT_SHUNT_DEF		1000	// ‚ ÏŒÏ ı1000
+#define CURRENT_SHUNT_MIN		10		// –≤ –º–û–º —Ö1000
+#define CURRENT_SHUNT_MAX		10000	// –≤ –º–û–º —Ö1000
+#define CURRENT_SHUNT_DEF		1000	// –≤ –º–û–º —Ö1000
 //
 #define GAIN_COEFFICIENT_MIN	1
 #define GAIN_COEFFICIENT_MAX	10000

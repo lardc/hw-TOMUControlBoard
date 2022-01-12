@@ -1,4 +1,4 @@
-#include "InitConfig.h"
+п»ї#include "InitConfig.h"
 #include "SysConfig.h"
 
 
@@ -29,52 +29,52 @@ void EI_Config()
 
 void IO_Config()
 {
-	// Включение тактирования портов
+	// Р’РєР»СЋС‡РµРЅРёРµ С‚Р°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕСЂС‚РѕРІ
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
 
-	// Аналоговые входы
-	GPIO_Config (GPIOA, Pin_0, Analog, NoPull, HighSpeed, NoPull);				// PA0 - вход АЦП (напряжение батареи)
-	GPIO_Config (GPIOA, Pin_1, Analog, NoPull, HighSpeed, NoPull);				// PA1 - вход АЦП (ток DUT)
+	// РђРЅР°Р»РѕРіРѕРІС‹Рµ РІС…РѕРґС‹
+	GPIO_Config (GPIOA, Pin_0, Analog, NoPull, HighSpeed, NoPull);				// PA0 - РІС…РѕРґ РђР¦Рџ (РЅР°РїСЂСЏР¶РµРЅРёРµ Р±Р°С‚Р°СЂРµРё)
+	GPIO_Config (GPIOA, Pin_1, Analog, NoPull, HighSpeed, NoPull);				// PA1 - РІС…РѕРґ РђР¦Рџ (С‚РѕРє DUT)
 
-	// Выходы
-	GPIO_Config (GPIOA, Pin_2,  Output, PushPull, HighSpeed, NoPull);			// PA2 - Mreset Сброс счетчиков
+	// Р’С‹С…РѕРґС‹
+	GPIO_Config (GPIOA, Pin_2,  Output, PushPull, HighSpeed, NoPull);			// PA2 - Mreset РЎР±СЂРѕСЃ СЃС‡РµС‚С‡РёРєРѕРІ
 	GPIO_Bit_Rst(GPIOA, Pin_2);
-	GPIO_Config (GPIOA, Pin_3,  Output, PushPull, HighSpeed, NoPull);			// PA3 - Загрузка сдвигового регистра
+	GPIO_Config (GPIOA, Pin_3,  Output, PushPull, HighSpeed, NoPull);			// PA3 - Р—Р°РіСЂСѓР·РєР° СЃРґРІРёРіРѕРІРѕРіРѕ СЂРµРіРёСЃС‚СЂР°
 	GPIO_Bit_Rst(GPIOA, Pin_3);
-	GPIO_Config (GPIOA, Pin_4,  Output, PushPull, HighSpeed, NoPull);			// PA4 - Внешний индикатор
+	GPIO_Config (GPIOA, Pin_4,  Output, PushPull, HighSpeed, NoPull);			// PA4 - Р’РЅРµС€РЅРёР№ РёРЅРґРёРєР°С‚РѕСЂ
 	GPIO_Bit_Rst(GPIOA, Pin_4);
-	GPIO_Config (GPIOA, Pin_5,  Output, PushPull, HighSpeed, NoPull);			// PA5 - Тактирование SPI сдвиговых регистров
+	GPIO_Config (GPIOA, Pin_5,  Output, PushPull, HighSpeed, NoPull);			// PA5 - РўР°РєС‚РёСЂРѕРІР°РЅРёРµ SPI СЃРґРІРёРіРѕРІС‹С… СЂРµРіРёСЃС‚СЂРѕРІ
 	GPIO_Bit_Rst(GPIOA, Pin_5);
-	GPIO_Config (GPIOA, Pin_7,  Output, PushPull, HighSpeed, NoPull);			// PA7 - Вентилятор
+	GPIO_Config (GPIOA, Pin_7,  Output, PushPull, HighSpeed, NoPull);			// PA7 - Р’РµРЅС‚РёР»СЏС‚РѕСЂ
 	GPIO_Bit_Rst(GPIOA, Pin_7);
-	GPIO_Config (GPIOA, Pin_8,  Output, PushPull, HighSpeed, NoPull);			// PA8 - Внешняя синхронизация
+	GPIO_Config (GPIOA, Pin_8,  Output, PushPull, HighSpeed, NoPull);			// PA8 - Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
 	GPIO_Bit_Rst(GPIOA, Pin_8);
-	GPIO_Config (GPIOB, Pin_0,  Output, PushPull, HighSpeed, NoPull);			// PB0 - CS SPI сдвиговых регистров
+	GPIO_Config (GPIOB, Pin_0,  Output, PushPull, HighSpeed, NoPull);			// PB0 - CS SPI СЃРґРІРёРіРѕРІС‹С… СЂРµРіРёСЃС‚СЂРѕРІ
 	GPIO_Bit_Set(GPIOB, Pin_0);
-	GPIO_Config (GPIOB, Pin_2,  Output, OpenDrain, HighSpeed, NoPull);			// PB1 - Сброс защёлки Gate
+	GPIO_Config (GPIOB, Pin_2,  Output, OpenDrain, HighSpeed, NoPull);			// PB1 - РЎР±СЂРѕСЃ Р·Р°С‰С‘Р»РєРё Gate
 	GPIO_Bit_Rst(GPIOB, Pin_2);
-	GPIO_Config (GPIOB, Pin_5,  Output, PushPull, HighSpeed, NoPull);			// PB5 - Запуск gate
+	GPIO_Config (GPIOB, Pin_5,  Output, PushPull, HighSpeed, NoPull);			// PB5 - Р—Р°РїСѓСЃРє gate
 	GPIO_Bit_Rst(GPIOB, Pin_5);
-	GPIO_Config (GPIOB, Pin_6,  Output, PushPull, HighSpeed, NoPull);			// PB6 - Управление коммутацией
+	GPIO_Config (GPIOB, Pin_6,  Output, PushPull, HighSpeed, NoPull);			// PB6 - РЈРїСЂР°РІР»РµРЅРёРµ РєРѕРјРјСѓС‚Р°С†РёРµР№
 	GPIO_Bit_Rst(GPIOB, Pin_6);
-	GPIO_Config (GPIOB, Pin_10, Output, PushPull, HighSpeed, NoPull);			// PB10 - EN внешний последовательный интерфейс
+	GPIO_Config (GPIOB, Pin_10, Output, PushPull, HighSpeed, NoPull);			// PB10 - EN РІРЅРµС€РЅРёР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ
 	GPIO_Bit_Rst(GPIOB, Pin_10);
-	GPIO_Config (GPIOB, Pin_12, Output, PushPull, HighSpeed, NoPull);			// PB12 - Индикатор на плате
+	GPIO_Config (GPIOB, Pin_12, Output, PushPull, HighSpeed, NoPull);			// PB12 - РРЅРґРёРєР°С‚РѕСЂ РЅР° РїР»Р°С‚Рµ
 	GPIO_Bit_Rst(GPIOB, Pin_12);
-	GPIO_Config (GPIOB, Pin_13, Output, PushPull, HighSpeed, NoPull);			// PB13 - SRCK внешний последовательный интерфейс
+	GPIO_Config (GPIOB, Pin_13, Output, PushPull, HighSpeed, NoPull);			// PB13 - SRCK РІРЅРµС€РЅРёР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ
 	GPIO_Bit_Rst(GPIOB, Pin_13);
-	GPIO_Config (GPIOB, Pin_14, Output, PushPull, HighSpeed, NoPull);			// PB14 - RCK внешний последовательный интерфейс
+	GPIO_Config (GPIOB, Pin_14, Output, PushPull, HighSpeed, NoPull);			// PB14 - RCK РІРЅРµС€РЅРёР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ
 	GPIO_Bit_Rst(GPIOB, Pin_14);
-	GPIO_Config (GPIOB, Pin_15, Output, PushPull, HighSpeed, NoPull);			// PB15 - SEROUT внешний последовательный интерфейс
+	GPIO_Config (GPIOB, Pin_15, Output, PushPull, HighSpeed, NoPull);			// PB15 - SEROUT РІРЅРµС€РЅРёР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ
 	GPIO_Bit_Rst(GPIOB, Pin_15);
 
-	// Входы
-	GPIO_Config (GPIOA, Pin_6, Input, NoPull, HighSpeed, NoPull);				// PA6 - DATA SPI сдвиговых регистров
-	GPIO_Config (GPIOB, Pin_4, Input, NoPull, HighSpeed, NoPull);				// PB4 - Переполнение счетчика уровня 90%
-	GPIO_Config (GPIOB, Pin_8, Input, NoPull, HighSpeed, NoPull);				// PB8 - Переполнение счетчика уровня 10%
+	// Р’С…РѕРґС‹
+	GPIO_Config (GPIOA, Pin_6, Input, NoPull, HighSpeed, NoPull);				// PA6 - DATA SPI СЃРґРІРёРіРѕРІС‹С… СЂРµРіРёСЃС‚СЂРѕРІ
+	GPIO_Config (GPIOB, Pin_4, Input, NoPull, HighSpeed, NoPull);				// PB4 - РџРµСЂРµРїРѕР»РЅРµРЅРёРµ СЃС‡РµС‚С‡РёРєР° СѓСЂРѕРІРЅСЏ 90%
+	GPIO_Config (GPIOB, Pin_8, Input, NoPull, HighSpeed, NoPull);				// PB8 - РџРµСЂРµРїРѕР»РЅРµРЅРёРµ СЃС‡РµС‚С‡РёРєР° СѓСЂРѕРІРЅСЏ 10%
 
-	// Альтернативные функции
+	// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Рµ С„СѓРЅРєС†РёРё
 	GPIO_Config (GPIOA, Pin_11, AltFn, PushPull, HighSpeed, NoPull);			// PA11 (CAN RX)
 	GPIO_AltFn  (GPIOA, Pin_11, AltFn_9);
 	GPIO_Config (GPIOA, Pin_12, AltFn, PushPull, HighSpeed, NoPull);			// PA12 (CAN TX)
@@ -91,7 +91,7 @@ void CAN_Config()
 	RCC_CAN_Clk_EN(CAN_1_ClkEN);
 	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
 	NCAN_FIFOInterrupt(TRUE);
-	NCAN_FilterInit(0, 0, 0);		// Фильтр 0 пропускает все сообщения
+	NCAN_FilterInit(0, 0, 0);		// Р¤РёР»СЊС‚СЂ 0 РїСЂРѕРїСѓСЃРєР°РµС‚ РІСЃРµ СЃРѕРѕР±С‰РµРЅРёСЏ
 }
 //------------------------------------------------------------------------------
 

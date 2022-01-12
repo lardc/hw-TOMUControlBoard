@@ -1,5 +1,5 @@
-//-----------------------------------------------
-// Основная логика
+п»ї//-----------------------------------------------
+// РћСЃРЅРѕРІРЅР°СЏ Р»РѕРіРёРєР°
 //-----------------------------------------------
 
 // Header
@@ -25,14 +25,14 @@
 //
 typedef void (*FUNC_AsyncDelegate)();
 //
-// Вспомогательные состояния
+// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ СЃРѕСЃС‚РѕСЏРЅРёСЏ
 typedef enum __SubState
 {
-	SS_None				= 0,	// Неопределённое
-	SS_StopProcess		= 1,	// Запрос остановки процесса
-	SS_WaitVoltage		= 2,	// Ожидание выхода на заданное напряжение
-	SS_VoltageReady		= 3,	// Готовность к измерению
-	SS_WaitContactor	= 4		// Ожидание срабатывания контактора
+	SS_None				= 0,	// РќРµРѕРїСЂРµРґРµР»С‘РЅРЅРѕРµ
+	SS_StopProcess		= 1,	// Р—Р°РїСЂРѕСЃ РѕСЃС‚Р°РЅРѕРІРєРё РїСЂРѕС†РµСЃСЃР°
+	SS_WaitVoltage		= 2,	// РћР¶РёРґР°РЅРёРµ РІС‹С…РѕРґР° РЅР° Р·Р°РґР°РЅРЅРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ
+	SS_VoltageReady		= 3,	// Р“РѕС‚РѕРІРЅРѕСЃС‚СЊ Рє РёР·РјРµСЂРµРЅРёСЋ
+	SS_WaitContactor	= 4		// РћР¶РёРґР°РЅРёРµ СЃСЂР°Р±Р°С‚С‹РІР°РЅРёСЏ РєРѕРЅС‚Р°РєС‚РѕСЂР°
 } SubState;
 
 
@@ -65,27 +65,27 @@ void CONTROL_WatchDogUpdate();
 //
 void CONTROL_Init()
 {
-	// Переменные для конфигурации EndPoint
+	// РџРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё EndPoint
 	Int16U EPIndexes[EP_COUNT];
 	Int16U EPSized[EP_COUNT];
 	pInt16U EPCounters[EP_COUNT];
 	pInt16U EPDatas[EP_COUNT];
 
-	// Конфигурация сервиса работы Data-table и EPROM
+	// РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ СЃРµСЂРІРёСЃР° СЂР°Р±РѕС‚С‹ Data-table Рё EPROM
 	EPROMServiceConfig EPROMService = { (FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT };
-	// Инициализация data table
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ data table
 	DT_Init(EPROMService, FALSE);
 	DT_SaveFirmwareInfo(CAN_SLAVE_NID, CAN_MASTER_NID);
-	// Инициализация device profile
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ device profile
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
 	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
-	// Сброс значений
+	// РЎР±СЂРѕСЃ Р·РЅР°С‡РµРЅРёР№
 	DEVPROFILE_ResetControlSection();
 	//
 	CONTROL_SetDeviceState(DS_None);
 	CONTROL_ResetToDefaults();
 	//
-	// Настройка TOCU
+	// РќР°СЃС‚СЂРѕР№РєР° TOCU
 	CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
 }
 //------------------------------------------------------------------------------
@@ -307,7 +307,7 @@ void CONTROL_BatteryVoltageMonitor()
 		BatteryVoltage = MEASURE_BatteryVoltage();
 		DataTable[REG_DBG_VSO_VALUE] = BatteryVoltage;
 
-		// Логика работы вентиляторов
+		// Р›РѕРіРёРєР° СЂР°Р±РѕС‚С‹ РІРµРЅС‚РёР»СЏС‚РѕСЂРѕРІ
 		if ((CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
 		{
 			FanEnable = TRUE;
@@ -321,16 +321,16 @@ void CONTROL_BatteryVoltageMonitor()
 		}
 		LL_ExternalFan(FanEnable);
 
-		// Оцифровка напряжения
+		// РћС†РёС„СЂРѕРІРєР° РЅР°РїСЂСЏР¶РµРЅРёСЏ
 		if ((CONTROL_State == DS_Ready) || (CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
 		{
-			// Поддержание заряда батареи в режиме готовности
+			// РџРѕРґРґРµСЂР¶Р°РЅРёРµ Р·Р°СЂСЏРґР° Р±Р°С‚Р°СЂРµРё РІ СЂРµР¶РёРјРµ РіРѕС‚РѕРІРЅРѕСЃС‚Рё
 			if (BatteryVoltage <= V_BAT_THRESHOLD_MIN)
 				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, TRUE);
 			else if (BatteryVoltage > V_BAT_THRESHOLD_MAX)
 				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, FALSE);
 
-			// Таймаут ожидания требуемого напряжения при заряде или старте измерений
+			// РўР°Р№РјР°СѓС‚ РѕР¶РёРґР°РЅРёСЏ С‚СЂРµР±СѓРµРјРѕРіРѕ РЅР°РїСЂСЏР¶РµРЅРёСЏ РїСЂРё Р·Р°СЂСЏРґРµ РёР»Рё СЃС‚Р°СЂС‚Рµ РёР·РјРµСЂРµРЅРёР№
 			if ((CONTROL_State == DS_Charging) || ((CONTROL_State == DS_InProcess) && (SUB_State == SS_WaitVoltage)))
 			{
 				if (CONTROL_TimeCounter > CONTROL_TimeCounterDelay)
@@ -343,17 +343,17 @@ void CONTROL_BatteryVoltageMonitor()
 
 				if ((BatteryVoltage > V_BAT_THRESHOLD_MIN) && (BatteryVoltage < V_BAT_THRESHOLD_MAX))
 				{
-					// Смена состояния при завершении заряда
+					// РЎРјРµРЅР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РїСЂРё Р·Р°РІРµСЂС€РµРЅРёРё Р·Р°СЂСЏРґР°
 					if (CONTROL_State == DS_Charging)
 						CONTROL_SetDeviceState(DS_Ready);
-					// Переход на следующий шаг измерения
+					// РџРµСЂРµС…РѕРґ РЅР° СЃР»РµРґСѓСЋС‰РёР№ С€Р°Рі РёР·РјРµСЂРµРЅРёСЏ
 					else
 						SUB_State = SS_VoltageReady;
 				}
 			}
 		}
 
-		// Если блок простаивает
+		// Р•СЃР»Рё Р±Р»РѕРє РїСЂРѕСЃС‚Р°РёРІР°РµС‚
 		if ((CONTROL_State == DS_None) && (CONTROL_TimeCounter > CONTROL_TimeIdleSendTOCU))
 		{
 			CONTROL_TimeIdleSendTOCU = CONTROL_TimeCounter + T_IDLE_SEND_TOCU;
@@ -382,58 +382,58 @@ void CONTROL_Logic()
 			CONTROL_SetDeviceState(DS_Ready);
 		}
 
-		// Выполнение необходимой коммутации
+		// Р’С‹РїРѕР»РЅРµРЅРёРµ РЅРµРѕР±С…РѕРґРёРјРѕР№ РєРѕРјРјСѓС‚Р°С†РёРё
 		if (SUB_State == SS_VoltageReady)
 		{
 			LL_GateLatch(FALSE);
-			LL_RelayControl(TRUE);									// Замыкание выходных реле
-			CUSTINT_SendTOCU(0, TRUE, TRUE, FALSE);					// Отключение PSBoard + замыкание контактора
+			LL_RelayControl(TRUE);									// Р—Р°РјС‹РєР°РЅРёРµ РІС‹С…РѕРґРЅС‹С… СЂРµР»Рµ
+			CUSTINT_SendTOCU(0, TRUE, TRUE, FALSE);					// РћС‚РєР»СЋС‡РµРЅРёРµ PSBoard + Р·Р°РјС‹РєР°РЅРёРµ РєРѕРЅС‚Р°РєС‚РѕСЂР°
 			CONTROL_TimeCounterDelay = CONTROL_TimeCounter + DELAY_CONTACTOR;
 
 			SUB_State = SS_WaitContactor;
 		}
 
-		// Непосредственный запуск измерения
+		// РќРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅС‹Р№ Р·Р°РїСѓСЃРє РёР·РјРµСЂРµРЅРёСЏ
 		if ((SUB_State == SS_WaitContactor) && (CONTROL_TimeCounter > CONTROL_TimeCounterDelay))
 		{
 			CurrentSetpoint = DataTable[REG_CURRENT_VALUE];
 			Overflow90 = FALSE;
 			Overflow10 = FALSE;
 
-			CUSTINT_SendTOCU(CurrentSetpoint, TRUE, TRUE, FALSE);	// Отпирание нужных мосфетов
+			CUSTINT_SendTOCU(CurrentSetpoint, TRUE, TRUE, FALSE);	// РћС‚РїРёСЂР°РЅРёРµ РЅСѓР¶РЅС‹С… РјРѕСЃС„РµС‚РѕРІ
 			DELAY_US(30);
-			CurrentPreActual = MEASURE_DUTCurrent();				// Измерения тока до подачи сигнала управления для определения кз на выходе
+			CurrentPreActual = MEASURE_DUTCurrent();				// РР·РјРµСЂРµРЅРёСЏ С‚РѕРєР° РґРѕ РїРѕРґР°С‡Рё СЃРёРіРЅР°Р»Р° СѓРїСЂР°РІР»РµРЅРёСЏ РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РєР· РЅР° РІС‹С…РѕРґРµ
 
 			if(CurrentPreActual < CURRENT_MIN_THRESHOLD)
 			{
-				LL_GateLatch(TRUE);										// Включение защёлки сигнала управления
-				LL_TimersReset(FALSE);									// Активация счётчиков
+				LL_GateLatch(TRUE);										// Р’РєР»СЋС‡РµРЅРёРµ Р·Р°С‰С‘Р»РєРё СЃРёРіРЅР°Р»Р° СѓРїСЂР°РІР»РµРЅРёСЏ
+				LL_TimersReset(FALSE);									// РђРєС‚РёРІР°С†РёСЏ СЃС‡С‘С‚С‡РёРєРѕРІ
 				INT_OverflowEnable(TRUE);
 
-				LL_GateControl(TRUE);									// Запуск тока управления
+				LL_GateControl(TRUE);									// Р—Р°РїСѓСЃРє С‚РѕРєР° СѓРїСЂР°РІР»РµРЅРёСЏ
 				LL_ExternalSync(TRUE);
 				DELAY_US(40);
-				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
+				CurrentActual = MEASURE_DUTCurrent();					// РР·РјРµСЂРµРЅРёРµ С‚РѕРєР° С‡РµСЂРµР· РїСЂРёР±РѕСЂ
 			}
 
 			INT_OverflowEnable(FALSE);
-			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
-			CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
-			LL_GateControl(FALSE);									// Отключение тока управления
-			LL_TimersReset(TRUE);									// Сброс системы измерения времени
+			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Р—Р°РєСЂС‹С‚РёРµ СЃРёР»РѕРІС‹С… РјРѕСЃС„РµС‚РѕРІ + СЂР°Р·РјС‹РєР°РЅРёРµ РєРѕРЅС‚Р°РєС‚РѕСЂР°
+			CountersData = CUSTINT_ReceiveDataSR();					// РЎС‡РёС‚С‹РІР°РЅРёРµ СЃС‹СЂС‹С… Р·РЅР°С‡РµРЅРёР№ РёР· СЃРёСЃС‚РµРјС‹ СЃС‡РµС‚Р° РІСЂРµРјРµРЅРё
+			LL_GateControl(FALSE);									// РћС‚РєР»СЋС‡РµРЅРёРµ С‚РѕРєР° СѓРїСЂР°РІР»РµРЅРёСЏ
+			LL_TimersReset(TRUE);									// РЎР±СЂРѕСЃ СЃРёСЃС‚РµРјС‹ РёР·РјРµСЂРµРЅРёСЏ РІСЂРµРјРµРЅРё
 			LL_ExternalSync(FALSE);
-			LL_GateLatch(FALSE);									// Сброс защёлки
-			LL_RelayControl(FALSE);									// Размыкание реле
+			LL_GateLatch(FALSE);									// РЎР±СЂРѕСЃ Р·Р°С‰С‘Р»РєРё
+			LL_RelayControl(FALSE);									// Р Р°Р·РјС‹РєР°РЅРёРµ СЂРµР»Рµ
 
-			// Получение времён из счётчиков
+			// РџРѕР»СѓС‡РµРЅРёРµ РІСЂРµРјС‘РЅ РёР· СЃС‡С‘С‚С‡РёРєРѕРІ
 			Counter10Percent = CUSTINT_UnpackData10SR(CountersData);
 			Counter90Percent = CUSTINT_UnpackData90SR(CountersData);
 
-			// Запись отладочных результатов по току
+			// Р—Р°РїРёСЃСЊ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РїРѕ С‚РѕРєСѓ
 			DataTable[REG_DBG_I_DUT_VALUE] = CurrentActual;
 			DataTable[REG_DBG_PRE_I_DUT_VALUE] = CurrentPreActual;
 
-			// Обработка внештатных ситуаций
+			// РћР±СЂР°Р±РѕС‚РєР° РІРЅРµС€С‚Р°С‚РЅС‹С… СЃРёС‚СѓР°С†РёР№
 			if ((CUSTINT_UnpackData90SR(CountersData) == 0) &&
 				(CUSTINT_UnpackData10SR(CountersData) == 0) && (CurrentPreActual < CURRENT_MIN_THRESHOLD))
 			{
@@ -460,7 +460,7 @@ void CONTROL_Logic()
 				Problem = PROBLEM_OVERFLOW10;
 			}
 
-			// Запись результатов
+			// Р—Р°РїРёСЃСЊ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 			DataTable[REG_MEAS_CURRENT_VALUE] = CurrentActual;
 			if ((CurrentActual < (1.0f - CURRENT_MAX_DISTORTION) * CurrentSetpoint) ||
 				(CurrentActual > (1.0f + CURRENT_MAX_DISTORTION) * CurrentSetpoint))
@@ -481,7 +481,7 @@ void CONTROL_Logic()
 				//DataTable[REG_MEAS_TIME_ON] = 0;
 			}
 
-			// Запись ошибок
+			// Р—Р°РїРёСЃСЊ РѕС€РёР±РѕРє
 			DataTable[REG_WARNING] = Warning;
 			DataTable[REG_PROBLEM] = Problem;
 

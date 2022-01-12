@@ -1,4 +1,4 @@
-#include "Measurement.h"
+ï»¿#include "Measurement.h"
 #include "DataTable.h"
 #include "ZwADC.h"
 
@@ -19,13 +19,13 @@ float MEASURE_BatteryVoltage()
 	float P1 = (float)DataTable[REG_P1_U_VSO] / 1000;
 	float P2 = (float)((Int16S)DataTable[REG_P2_U_VSO]) / 1e6;
 
-	// Îöèôðîâêà è óäàëåíèå ñìåùåíèÿ
+	// ÐžÑ†Ð¸Ñ„Ñ€Ð¾Ð²ÐºÐ° Ð¸ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ
 	float Result = (float)MEASURE_BatteryVoltageRaw() + (Int16S)DataTable[REG_VSO_MEAS_OFFSET];
 
-	// Ïåðåñ÷¸ò ðåçóëüòàòà â íàïðÿæåíèå
+	// ÐŸÐµÑ€ÐµÑÑ‡Ñ‘Ñ‚ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð² Ð½Ð°Ð¿Ñ€ÑÐ¶ÐµÐ½Ð¸Ðµ
 	Result = (Result * ADC_REF_MV) / ADC_RESOLUTION * K / 1000;
 
-	// Òîíêàÿ êîððåêòèðîâêà
+	// Ð¢Ð¾Ð½ÐºÐ°Ñ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð¸Ñ€Ð¾Ð²ÐºÐ°
 	Result = Result * Result * P2 + Result * P1 + P0;
 
 	return (Result > 0) ? Result : 0;
@@ -47,13 +47,13 @@ float MEASURE_DUTCurrent()
 	float P1 = (float)DataTable[REG_P1_I_DUT] / 1000;
 	float P2 = (float)((Int16S)DataTable[REG_P2_I_DUT]) / 1e6;
 
-	// Îöèôðîâêà è óäàëåíèå ñìåùåíèÿ
+	// ÐžÑ†Ð¸Ñ„Ñ€Ð¾Ð²ÐºÐ° Ð¸ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ
 	float Result = (float)MEASURE_DUTCurrentRaw() + (Int16S)DataTable[REG_I_MEAS_OFFSET];
 
-	// Ïåðåñ÷¸ò ðåçóëüòàòà â íàïðÿæåíèå
+	// ÐŸÐµÑ€ÐµÑÑ‡Ñ‘Ñ‚ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð² Ð½Ð°Ð¿Ñ€ÑÐ¶ÐµÐ½Ð¸Ðµ
 	Result = (Result * ADC_REF_MV) / (ADC_RESOLUTION * K * ShuntRes);
 
-	// Òîíêàÿ êîððåêòèðîâêà
+	// Ð¢Ð¾Ð½ÐºÐ°Ñ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð¸Ñ€Ð¾Ð²ÐºÐ°
 	Result = Result * Result * P2 + Result * P1 + P0;
 
 	return (Result > 0) ? Result : 0;

@@ -1,4 +1,4 @@
-// Header
+п»ї// Header
 #include "LowLevel.h"
 
 // Functions
@@ -65,7 +65,7 @@ void LL_GateLatch(bool State)
 }
 //-----------------------------
 
-// Порты Serial shift registers
+// РџРѕСЂС‚С‹ Serial shift registers
 //
 // DATA
 bool LL_IsShiftRegData()
@@ -95,7 +95,7 @@ void LL_ShiftRegCS(bool State)
 }
 //-----------------------------
 
-// Порты Serial to TOCU
+// РџРѕСЂС‚С‹ Serial to TOCU
 //
 // Enable
 void LL_TOCUSerialEnable(bool State)

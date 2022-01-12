@@ -1,4 +1,4 @@
-#ifndef __GIT_INFO_H
+﻿#ifndef __GIT_INFO_H
 #define __GIT_INFO_H
 
 #include "stdinc.h"

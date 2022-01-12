@@ -1,4 +1,4 @@
-// Include
+п»ї// Include
 #include "Interrupts.h"
 //
 #include <InitConfig.h>
@@ -70,7 +70,7 @@ void TIM3_IRQHandler()
 
 		if (CONTROL_TimeCounter > (LED_BlinkTimeCounter + LED_BLINK_TIME))
 		{
-			//Моргаем светодиодом
+			//РњРѕСЂРіР°РµРј СЃРІРµС‚РѕРґРёРѕРґРѕРј
 			if (!LL_IsBlinkLED())
 				LL_BlinkLED(TRUE);
 			else
