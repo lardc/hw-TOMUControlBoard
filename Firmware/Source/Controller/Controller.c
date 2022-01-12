@@ -397,6 +397,8 @@ void CONTROL_Logic()
 		if ((SUB_State == SS_WaitContactor) && (CONTROL_TimeCounter > CONTROL_TimeCounterDelay))
 		{
 			CurrentSetpoint = DataTable[REG_CURRENT_VALUE];
+			Overflow90 = FALSE;
+			Overflow10 = FALSE;
 
 			CUSTINT_SendTOCU(CurrentSetpoint, TRUE, TRUE, FALSE);	// Отпирание нужных мосфетов
 			DELAY_US(30);
@@ -406,8 +408,7 @@ void CONTROL_Logic()
 			{
 				LL_GateLatch(TRUE);										// Включение защёлки сигнала управления
 				LL_TimersReset(FALSE);									// Активация счётчиков
-				Overflow90 = FALSE;
-				Overflow10 = FALSE;
+				INT_OverflowEnable(TRUE);
 
 				LL_GateControl(TRUE);									// Запуск тока управления
 				LL_ExternalSync(TRUE);
@@ -416,6 +417,7 @@ void CONTROL_Logic()
 				CountersData = CUSTINT_ReceiveDataSR();					// Считывание сырых значений из системы счета времени
 			}
 
+			INT_OverflowEnable(FALSE);
 			CUSTINT_SendTOCU(0, TRUE, FALSE, FALSE);				// Закрытие силовых мосфетов + размыкание контактора
 			LL_GateControl(FALSE);									// Отключение тока управления
 			LL_TimersReset(TRUE);									// Сброс системы измерения времени
@@ -441,7 +443,7 @@ void CONTROL_Logic()
 			{
 				Problem = PROBLEM_NO_PWR;
 			}
-			else if (CurrentPreActual > CURRENT_MIN_THRESHOLD)
+			else if (CurrentPreActual >= CURRENT_MIN_THRESHOLD)
 			{
 				Problem = PROBLEM_SHORT;
 			}

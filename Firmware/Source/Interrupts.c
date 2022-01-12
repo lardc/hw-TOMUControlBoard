@@ -35,6 +35,13 @@ void EXTI9_5_IRQHandler()
 }
 //-----------------------------------------
 
+void INT_OverflowEnable(bool Enable)
+{
+	EXTI_EnableInterrupt(EXTI_4, 0, Enable);
+	EXTI_EnableInterrupt(EXTI_8, 0, Enable);
+}
+//-----------------------------------------
+
 void USART1_IRQHandler()
 {
 	if (ZwSCI_RecieveCheck(USART1))
