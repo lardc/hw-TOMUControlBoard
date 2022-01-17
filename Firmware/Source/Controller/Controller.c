@@ -285,6 +285,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				CUSTINT_SendTOCU(DataTable[REG_CURRENT_VALUE], FALSE, TRUE, FALSE);
 				DELAY_US(5);
 				DataTable[REG_MEAS_CURRENT_VALUE] = MEASURE_DUTCurrent();
+				DELAY_US(45);
 				CUSTINT_SendTOCU(0, FALSE, FALSE, TRUE);
 				CONTROL_Debug = FALSE;
 			}
