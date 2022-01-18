@@ -164,7 +164,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 					LL_ExternalLED(TRUE);
 					CONTROL_ResetToDefaults();
 					//
-					CONTROL_TimeCounterDelay = CONTROL_TimeCounter + T_CHARGE_DELAY_SHORT;
+					CONTROL_TimeCounterDelay = CONTROL_TimeCounter + T_CHARGE_DELAY;
 					SUB_State = SS_WaitVoltage;
 					CONTROL_SetDeviceState(DS_InProcess);
 				}
@@ -301,7 +301,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 void CONTROL_BatteryVoltageMonitor()
 {
-	if (!CONTROL_Debug){
+	if (!CONTROL_Debug)
+	{
 		float BatteryVoltage;
 		bool FanEnable = FALSE;
 
@@ -322,35 +323,31 @@ void CONTROL_BatteryVoltageMonitor()
 		}
 		LL_ExternalFan(FanEnable);
 
-		// Оцифровка напряжения
-		if ((CONTROL_State == DS_Ready) || (CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess))
+		// Логика включения/выключения заряда батареи
+		if ((CONTROL_State == DS_Charging) || (CONTROL_State == DS_InProcess && SUB_State == SS_WaitVoltage))
 		{
-			// Поддержание заряда батареи в режиме готовности
 			if (BatteryVoltage <= V_BAT_THRESHOLD_MIN)
 				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, TRUE);
 			else if (BatteryVoltage > V_BAT_THRESHOLD_MAX)
 				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, FALSE);
 
 			// Таймаут ожидания требуемого напряжения при заряде или старте измерений
-			if ((CONTROL_State == DS_Charging) || ((CONTROL_State == DS_InProcess) && (SUB_State == SS_WaitVoltage)))
+			if (CONTROL_TimeCounter > CONTROL_TimeCounterDelay)
 			{
-				if (CONTROL_TimeCounter > CONTROL_TimeCounterDelay)
-				{
-					LL_ExternalFan(FALSE);
-					CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
-					CONTROL_SwitchToFault(DF_BATTERY);
-					return;
-				}
+				LL_ExternalFan(FALSE);
+				CUSTINT_SendTOCU(0, FALSE, FALSE, FALSE);
+				CONTROL_SwitchToFault(DF_BATTERY);
+				return;
+			}
+			// Готовность напряжения
+			else if ((BatteryVoltage >= V_BAT_THRESHOLD_MIN) && (BatteryVoltage <= V_BAT_THRESHOLD_MAX))
+			{
+				CUSTINT_SendTOCU(0, FanEnable, (SUB_State == SS_WaitContactor) ? TRUE : FALSE, FALSE);
 
-				if ((BatteryVoltage > V_BAT_THRESHOLD_MIN) && (BatteryVoltage < V_BAT_THRESHOLD_MAX))
-				{
-					// Смена состояния при завершении заряда
-					if (CONTROL_State == DS_Charging)
-						CONTROL_SetDeviceState(DS_Ready);
-					// Переход на следующий шаг измерения
-					else
-						SUB_State = SS_VoltageReady;
-				}
+				if (CONTROL_State == DS_Charging)
+					CONTROL_SetDeviceState(DS_Ready);
+				else
+					SUB_State = SS_VoltageReady;
 			}
 		}
 
