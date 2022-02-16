@@ -410,8 +410,9 @@ void CONTROL_Logic()
 
 				LL_GateControl(TRUE);									// Запуск тока управления
 				LL_ExternalSync(TRUE);
-				DELAY_US(40);
+				DELAY_US(45);
 				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
+				DELAY_US(5);
 			}
 
 			INT_OverflowEnable(FALSE);
