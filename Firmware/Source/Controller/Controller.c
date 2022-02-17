@@ -469,8 +469,8 @@ void CONTROL_Logic()
 				Warning = WARNING_I_OUT_OF_RANGE;
 			}
 
-			DataTable[REG_MEAS_TIME_DELAY] = Counter90Percent;
-			DataTable[REG_MEAS_TIME_ON] = Counter10Percent;
+			DataTable[REG_MEAS_TIME_DELAY] = MEASURE_Counter90Percent(Counter90Percent);
+			DataTable[REG_MEAS_TIME_ON] = MEASURE_Counter10Percent(Counter10Percent);
 
 			if (Problem == PROBLEM_NONE)
 				DataTable[REG_TEST_FINISHED] = OPRESULT_OK;

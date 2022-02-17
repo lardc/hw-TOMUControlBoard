@@ -59,3 +59,27 @@ float MEASURE_DUTCurrent()
 	return (Result > 0) ? Result : 0;
 }
 //------------------------------------------------------------------------------
+
+uint32_t MEASURE_Counter10Percent(uint32_t SourceCountersData)
+{
+	float P0 = (Int16S)DataTable[REG_P0_Counter10Percent];
+	float P1 = (float)DataTable[REG_P1_Counter10Percent] / 1000;
+	float P2 = (float)((Int16S)DataTable[REG_P2_Counter10Percent]) / 1e6;
+
+	SourceCountersData = SourceCountersData * SourceCountersData * P2 + SourceCountersData * P1 + P0;
+
+	return (SourceCountersData > 0) ? SourceCountersData : 0;
+}
+//------------------------------------------------------------------------------
+
+uint32_t MEASURE_Counter90Percent(uint32_t SourceCountersData)
+{
+	float P0 = (Int16S)DataTable[REG_P0_Counter90Percent];
+	float P1 = (float)DataTable[REG_P1_Counter90Percent] / 1000;
+	float P2 = (float)((Int16S)DataTable[REG_P2_Counter90Percent]) / 1e6;
+
+	SourceCountersData = SourceCountersData * SourceCountersData * P2 + SourceCountersData * P1 + P0;
+
+	return (SourceCountersData > 0) ? SourceCountersData : 0;
+}
+//------------------------------------------------------------------------------
