@@ -414,6 +414,12 @@ void CONTROL_Logic()
 				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
 				DELAY_US(5);
 			}
+			else
+			{
+				DELAY_US(10);
+				CurrentActual = MEASURE_DUTCurrent();					// Измерение тока через прибор
+				DELAY_US(5);
+			}
 
 			INT_OverflowEnable(FALSE);
 			CUSTINT_SendTOCU(0, TRUE, TRUE, FALSE);					// Закрытие силовых мосфетов
